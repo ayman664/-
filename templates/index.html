@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#20252c">
+  <meta name="description" content="السيرة الذاتية للشاعرة والفنانة المسرحية فضيلة زيدان ناجي العامري من الديوانية.">
+  <title>{{ profile.name }} | سيرة فنانة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="{{ url_for('biography_page') }}" aria-label="فضيلة العامري، الصفحة الرئيسية">
+      <span class="wordmark-mark" aria-hidden="true">ف</span>
+      <span>{{ profile.name }}</span>
+    </a>
+    <nav aria-label="القائمة الرئيسية">
+      <a href="#profile">السيرة</a>
+      <a href="#story">المسيرة</a>
+      <a href="#gallery">الصور</a>
+      <a href="#poems">القصائد</a>
+      <a href="#work">أعمال مسرحية</a>
+    </nav>
+    <div class="admin-actions">
+      {% if is_admin %}
+        <button class="admin-button" type="button" data-open-dialog="#add-poem-dialog" aria-haspopup="dialog">＋ إضافة قصيدة</button>
+        <button class="edit-button" type="button" data-open-dialog="#edit-biography-dialog" aria-haspopup="dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m14.2 6.2 3.6 3.6M4 20l4.3-.9L19 8.4a2.55 2.55 0 0 0-3.6-3.6L4.7 15.7 4 20Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>تحرير السيرة</span>
+        </button>
+        <form method="post" action="{{ url_for('admin_logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="admin-logout" type="submit">خروج الإدارة</button>
+        </form>
+      {% else %}
+        <a class="admin-login-link" href="{{ url_for('admin_login') }}">دخول الإدارة</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div class="intro-inner">
+        <div class="intro-copy">
+          <p class="eyebrow"><span></span> فنانة عراقية · الديوانية</p>
+          <h1 id="page-title">{{ profile.name }}</h1>
+          <p class="intro-note">شاعرة شعبية · فنانة مسرحية · كاتبة ومخرجة</p>
+          <a class="intro-link" href="#story">اكتشف مسيرتها <span aria-hidden="true">←</span></a>
+        </div>
+        <figure class="intro-art">
+          <img class="profile-photo" src="{{ url_for('static', filename='portrait.png') }}" alt="صورة الفنانة والشاعرة فضيلة زيدان ناجي العامري" fetchpriority="high">
+          <span class="art-overline">ملف فنانة عراقية</span>
+          <figcaption class="photo-caption">
+            <span class="photo-caption-name">{{ profile.name }}</span>
+            <span class="photo-caption-meta">الشعر · المسرح · التمثيل</span>
+          </figcaption>
+          <span class="photo-location"><i></i> الديوانية، العراق</span>
+        </figure>
+        <div class="intro-bottom">
+          <span>السيرة الذاتية</span>
+          <span class="intro-bottom-line" aria-hidden="true"></span>
+          <span>قراءة في البدايات والمسيرة الفنية</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section page-width" id="profile" aria-labelledby="profile-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow section-kicker">٠١ / معلومات أساسية</p>
+          <h2 id="profile-heading">عن الفنانة</h2>
+        </div>
+        <p class="section-description">محطات الميلاد ومجالات الإبداع</p>
+      </div>
+      <div class="facts">
+        <article class="fact">
+          <span class="fact-index">01</span>
+          <div><h3>مكان الولادة والنشأة</h3><p>{% if profile.birth_place %}{{ profile.birth_place }}{% else %}<span class="not-set">لم يُسجّل بعد</span>{% endif %}</p></div>
+          <span class="fact-mark" aria-hidden="true">⌖</span>
+        </article>
+        <article class="fact">
+          <span class="fact-index">02</span>
+          <div><h3>سنة الميلاد</h3><p>{% if profile.birth_date %}{{ profile.birth_date }}{% else %}1956م{% endif %}</p></div>
+          <span class="fact-mark" aria-hidden="true">◷</span>
+        </article>
+        <article class="fact">
+          <span class="fact-index">03</span>
+          <div><h3>العمر</h3><p>{% if age is not none %}{{ age }} عامًا{% else %}<span class="not-set">يُحسب بعد تسجيل تاريخ الميلاد</span>{% endif %}</p></div>
+          <span class="fact-mark" aria-hidden="true">✳</span>
+        </article>
+        <article class="fact fact-fields">
+          <span class="fact-index">04</span>
+          <div><h3>المجالات الفنية</h3><p>الشعر · التمثيل · المسرح · الفنون الأدائية</p></div>
+          <span class="fact-mark" aria-hidden="true">✳</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="story-section" id="story" aria-labelledby="story-heading">
+      <div class="page-width">
+        <div class="section-heading story-heading">
+          <div>
+            <p class="eyebrow section-kicker">٠٢ / من البدايات</p>
+            <h2 id="story-heading">حكاية المسيرة</h2>
+          </div>
+          <p class="section-description">من بداياتها في الديوانية إلى الشعر والمسرح والتدريب</p>
+        </div>
+        <div class="timeline">
+          {% for section in sections %}
+            <article class="story-item{% if section.id == 8 %} story-featured{% endif %}"{% if section.id == 8 %} id="work"{% endif %}>
+              <span class="story-index">0{{ loop.index }}</span>
+              <div class="story-copy">
+                <h3>{{ section.heading }}</h3>
+                {% for paragraph in section.body.split('\n\n') %}
+                  <p>{{ paragraph }}</p>
+                {% endfor %}
+              </div>
+              {% if section.id == 8 %}<span class="feature-label">أعمال مسرحية</span>{% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery" aria-labelledby="gallery-heading">
+      <div class="page-width">
+        <div class="section-heading gallery-heading">
+          <div>
+            <p class="eyebrow section-kicker">٠٣ / من الأرشيف</p>
+            <h2 id="gallery-heading">حكايات على الخشبة</h2>
+          </div>
+          <p class="section-description">صور من ذاكرة فضيلة زيدان العامري المسرحية</p>
+        </div>
+        <div class="gallery-viewer" data-gallery role="region" tabindex="0" aria-label="معرض الصور المسرحية" aria-roledescription="معرض صور">
+          <div class="gallery-stage">
+            {% for photo in gallery_photos %}
+              <figure class="gallery-slide{% if loop.first %} is-active{% endif %}" data-gallery-slide aria-hidden="{{ 'false' if loop.first else 'true' }}">
+                <img src="{{ url_for('static', filename='gallery/' + photo[0]) }}" alt="{{ photo[1] }}" loading="{{ 'eager' if loop.first else 'lazy' }}">
+                <figcaption>
+                  <span class="gallery-caption-kicker">أرشيف فضيلة زيدان العامري</span>
+                  <span class="gallery-caption-title">{{ photo[2] }}</span>
+                </figcaption>
+              </figure>
+            {% endfor %}
+            <button class="gallery-arrow gallery-previous" type="button" data-gallery-previous aria-label="الصورة السابقة">‹</button>
+            <button class="gallery-arrow gallery-next" type="button" data-gallery-next aria-label="الصورة التالية">›</button>
+          </div>
+          <div class="gallery-controls">
+            <span class="gallery-counter" data-gallery-counter aria-live="polite">1 / {{ gallery_photos|length }}</span>
+            <div class="gallery-dots" aria-label="اختيار صورة">
+              {% for photo in gallery_photos %}
+                <button class="gallery-dot{% if loop.first %} is-active{% endif %}" type="button" data-gallery-dot="{{ loop.index0 }}" aria-label="عرض الصورة {{ loop.index }}" aria-pressed="{{ 'true' if loop.first else 'false' }}"></button>
+              {% endfor %}
+            </div>
+            <span class="gallery-hint">تتغير الصور تلقائيًا · استخدمي الأسهم أو النقاط للتنقل</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="poems-section page-width" id="poems" aria-labelledby="poems-heading">
+      <div class="section-heading poems-heading">
+        <div>
+          <p class="eyebrow section-kicker">٠٤ / القصائد</p>
+          <h2 id="poems-heading">مقاطع من شعر الشاعرة</h2>
+        </div>
+        <p class="section-description">اختَر قصيدة، واطّلع على نصّها الكامل في الجهة اليمنى</p>
+      </div>
+
+      <div class="poetry-layout">
+        <aside class="poetry-panel">
+          <div class="filter-group" aria-label="تصفية القصائد">
+            {% for category in poem_categories %}
+              <button class="filter{% if category == default_poem_category %} is-active{% endif %}" type="button" data-filter="{{ category }}">{{ category }}</button>
+            {% endfor %}
+          </div>
+
+          <div class="poem-list">
+            {% for poem in poems %}
+              <button class="poem-card{% if loop.first %} is-active{% endif %}" type="button" data-category="{{ poem.category }}" data-target="poem-{{ poem.id }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">
+                <span class="poem-tag">{{ poem.category }}</span>
+                <h3>{{ poem.title }}</h3>
+                <p>{{ poem.excerpt }}</p>
+              </button>
+            {% endfor %}
+            <p class="poem-empty" data-poem-empty{% if poems %} hidden{% endif %}>لا توجد قصائد منشورة حاليًا. ستُضاف القصائد الجديدة قريبًا.</p>
+          </div>
+        </aside>
+
+        <div class="poem-body-panel" aria-live="polite">
+          {% for poem in poems %}
+            <article class="poem-body-item{% if loop.first %} is-active{% endif %}" id="poem-{{ poem.id }}" data-category="{{ poem.category }}">
+              <div class="body-meta">
+                <span class="body-tag">{{ poem.category }}</span>
+                <span class="body-label">النص المختار</span>
+              </div>
+              <h3>{{ poem.title }}</h3>
+              {% for stanza in poem.body.split('\n\n') %}
+                <p class="poem-stanza">{{ stanza }}</p>
+              {% endfor %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-name" href="#profile">{{ profile.name }}</a>
+    <span>الشعر · المسرح · الفنون الأدائية</span>
+  </footer>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages" role="status" aria-live="polite">
+        {% for category, message in messages %}
+          <p class="message message-{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if is_admin %}
+  <dialog class="edit-dialog" id="edit-biography-dialog" aria-labelledby="dialog-title">
+    <form method="post" action="{{ url_for('biography_page') }}" class="edit-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow section-kicker">تحديث البيانات</p>
+          <h2 id="dialog-title">تحرير السيرة</h2>
+        </div>
+        <button class="close-button" type="button" data-close-dialog aria-label="إغلاق">×</button>
+      </div>
+      <label for="name">اسم الفنانة</label>
+      <input id="name" name="name" type="text" value="{{ profile.name }}" maxlength="100" required>
+      <label for="birth_date">تاريخ الميلاد</label>
+      <input id="birth_date" name="birth_date" type="date" value="{{ profile.birth_date }}">
+      <label for="birth_place">مكان الولادة والنشأة</label>
+      <input id="birth_place" name="birth_place" type="text" value="{{ profile.birth_place }}" maxlength="120" placeholder="المدينة، الدولة">
+      <p class="form-hint">يُحسب العمر تلقائيًا من تاريخ الميلاد.</p>
+      <button class="save-button" type="submit">حفظ البيانات</button>
+    </form>
+  </dialog>
+  <dialog class="edit-dialog" id="add-poem-dialog" aria-labelledby="add-poem-title">
+    <form method="post" action="{{ url_for('add_poem') }}" class="edit-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow section-kicker">إضافة إلى ديوان الشاعرة</p>
+          <h2 id="add-poem-title">قصيدة جديدة</h2>
+        </div>
+        <button class="close-button" type="button" data-close-dialog aria-label="إغلاق">×</button>
+      </div>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="poem-title">عنوان القصيدة</label>
+      <input id="poem-title" name="title" type="text" maxlength="160" required>
+      <label for="poem-category">التصنيف</label>
+      <select id="poem-category" name="category" required>
+        <option value="شعر">شعر</option>
+        <option value="أبوذية">أبوذية</option>
+      </select>
+      <label for="poem-excerpt">مقتطف يظهر في بطاقة القصيدة</label>
+      <input id="poem-excerpt" name="excerpt" type="text" maxlength="240" required>
+      <label for="poem-body">نص القصيدة</label>
+      <textarea id="poem-body" name="body" rows="8" maxlength="12000" required></textarea>
+      <p class="form-hint">افصل بين المقاطع بسطر فارغ لتحافظ على تنسيق القصيدة.</p>
+      <button class="save-button" type="submit">إضافة القصيدة إلى الموقع</button>
+    </form>
+  </dialog>
+  {% endif %}
+</body>
+</html>

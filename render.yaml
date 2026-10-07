@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: fadila-biography
+    runtime: python
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    disk:
+      name: biography-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: BIOGRAPHY_DATABASE_PATH
+        value: /var/data/biography.sqlite3
+      - key: SESSION_COOKIE_SECURE
+        value: "true"

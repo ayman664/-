@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#20252c">
+  <title>دخول الإدارة | فضيلة العامري</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="admin-login-page">
+    <form method="post" class="edit-form">
+      <div>
+        <p class="eyebrow section-kicker">مساحة خاصة</p>
+        <h1>دخول الإدارة</h1>
+      </div>
+      {% if configured %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="password">كلمة مرور الإدارة</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+        <button class="save-button" type="submit">تسجيل الدخول</button>
+      {% else %}
+        <p class="admin-login-notice">لم تُضبط كلمة مرور الإدارة على الخادم بعد. اضبط المتغير ADMIN_PASSWORD ثم أعد تشغيل الموقع.</p>
+      {% endif %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="messages" role="status" aria-live="polite">
+            {% for category, message in messages %}
+              <p class="message message-{{ category }}">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <a class="admin-login-link" href="{{ url_for('biography_page') }}">العودة إلى الموقع</a>
+    </form>
+  </main>
+</body>
+</html>
