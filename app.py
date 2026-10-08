@@ -248,6 +248,14 @@ def robots_txt():
     )
 
 
+@app.route("/google3b12ec2b77f8bead.html")
+def google_site_verification():
+    return Response(
+        "google-site-verification: google3b12ec2b77f8bead.html",
+        mimetype="text/plain",
+    )
+
+
 @app.route("/sitemap.xml")
 def sitemap_xml():
     page_url = escape(f"{public_base_url()}{url_for('biography_page')}")
