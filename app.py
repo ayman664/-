@@ -4,8 +4,9 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
+from xml.sax.saxutils import escape
 
-from flask import Flask, abort, flash, redirect, render_template, request, session, url_for
+from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -230,6 +231,35 @@ def calculate_age(birth_date):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 
+def public_base_url():
+    return (
+        os.environ.get("SITE_URL")
+        or os.environ.get("RENDER_EXTERNAL_URL")
+        or request.url_root
+    ).rstrip("/")
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    sitemap_url = f"{public_base_url()}{url_for('sitemap_xml')}"
+    return Response(
+        f"User-agent: *\nAllow: /\nSitemap: {sitemap_url}\n",
+        mimetype="text/plain",
+    )
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    page_url = escape(f"{public_base_url()}{url_for('biography_page')}")
+    return Response(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"<url><loc>{page_url}</loc></url>"
+        "</urlset>",
+        mimetype="application/xml",
+    )
+
+
 @app.route("/", methods=["GET", "POST"])
 def biography_page():
     if request.method == "POST":
@@ -273,6 +303,7 @@ def biography_page():
     sections = read_biography_sections()
     poems = read_poetry_entries()
     default_poem_category = poems[0]["category"] if poems else POEM_CATEGORIES[0]
+    site_url = f"{public_base_url()}{url_for('biography_page')}"
     return render_template(
         "index.html",
         profile=profile,
@@ -284,6 +315,34 @@ def biography_page():
         gallery_photos=GALLERY_PHOTOS,
         is_admin=is_admin(),
         csrf_token=create_csrf_token(),
+        site_url=site_url,
+        site_image_url=f"{public_base_url()}{url_for('static', filename='portrait.png')}",
+        structured_data={
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "WebSite",
+                    "name": "فضيلة العامري",
+                    "url": site_url,
+                    "inLanguage": "ar",
+                },
+                {
+                    "@type": "Person",
+                    "name": profile["name"],
+                    "alternateName": ["فضيلة العامري", "فضيلة زيدان العامري"],
+                    "url": site_url,
+                    "image": f"{public_base_url()}{url_for('static', filename='portrait.png')}",
+                    "description": "الشاعرة والفنانة المسرحية العراقية فضيلة زيدان ناجي العامري من الديوانية.",
+                    "jobTitle": ["شاعرة", "فنانة مسرحية", "كاتبة", "مخرجة"],
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": profile["birth_place"] or "الديوانية",
+                        "addressCountry": "العراق",
+                    },
+                    "knowsAbout": ["الشعر الشعبي العراقي", "المسرح", "التمثيل"],
+                },
+            ],
+        },
     )
 
 
