@@ -35,7 +35,7 @@ uv run --with Flask -m flask --app app run --port 5000
 
 ملف `.github/workflows/pages.yml` يبني الصفحة وملفات الصور وملفي الروبوتات وخريطة الموقع ثم ينشرها. يستخدم `scripts/build_static.py` عنوان المشروع الفرعي الصحيح على GitHub Pages. لا ترفع ملفات `.env` أو قاعدة `data/biography.sqlite3`.
 
-يتطلب تفعيل GitHub Pages على المستودع أول مرة صلاحية مالك الحساب؛ سير العمل يحاول إعداد Pages تلقائيًا. بعد اكتمال أول تشغيل ناجح، سيكون الموقع متاحًا على <https://ayman664.github.io/->.
+يجب على مالك المستودع تفعيل Pages مرة واحدة من **Settings → Pages → Build and deployment → Source → GitHub Actions**. بعد ذلك، ينشر سير العمل الموقع تلقائيًا مع كل تحديث لفرع `main` على <https://ayman664.github.io/->.
 
 ## الظهور في محركات البحث
 
