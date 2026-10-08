@@ -48,7 +48,7 @@
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
           <button class="admin-logout" type="submit">خروج الإدارة</button>
         </form>
-      {% else %}
+      {% elif not is_static_site %}
         <a class="admin-login-link" href="{{ url_for('admin_login') }}">دخول الإدارة</a>
       {% endif %}
     </div>

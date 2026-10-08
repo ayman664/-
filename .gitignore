@@ -1,6 +1,7 @@
 __pycache__/
 .venv/
 data/*.sqlite3
+_site/
 .env
 .env.*
 !.env.example

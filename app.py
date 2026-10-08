@@ -314,6 +314,7 @@ def biography_page():
         poem_categories=POEM_CATEGORIES,
         gallery_photos=GALLERY_PHOTOS,
         is_admin=is_admin(),
+        is_static_site=app.config.get("STATIC_SITE_BUILD", False),
         csrf_token=create_csrf_token(),
         site_url=site_url,
         site_image_url=f"{public_base_url()}{url_for('static', filename='portrait.png')}",
